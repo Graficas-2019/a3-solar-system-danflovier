@@ -117,7 +117,7 @@ function createScene(canvas) {
     // Create the Three.js renderer and attach it to our canvas
     renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true } );
     // Set the viewport size
-    renderer.setSize(canvas.width, canvas.height);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     // Set for OrbitControls
     document.body.appendChild(renderer.domElement);
     // Create a new Three.js scene
@@ -173,15 +173,15 @@ function createSolarSystem(){
     uranusRings.rotation.y = Math.PI / 3;
     uranus.add(uranusRings);
 
-    orbitMercury = generateOrbit(0,0,150);
-    orbitVenus = generateOrbit(0,0,200);
-    orbitEarth = generateOrbit(0,0,250);
-    orbitMars = generateOrbit(0,0,300);
-    orbitJupiter = generateOrbit(0,0,380);
-    orbitSaturn = generateOrbit(0,0,510);
-    orbitUranus = generateOrbit(0,0,620);
-    orbitNeptune = generateOrbit(0,0,700);
-    orbitPluto = generateOrbit(0,0,750);
+    orbitMercury = generateOrbit(150);
+    orbitVenus = generateOrbit(200);
+    orbitEarth = generateOrbit(250);
+    orbitMars = generateOrbit(300);
+    orbitJupiter = generateOrbit(380);
+    orbitSaturn = generateOrbit(510);
+    orbitUranus = generateOrbit(620);
+    orbitNeptune = generateOrbit(700);
+    orbitPluto = generateOrbit(750);
 
     orbitMercury.add(mercury);
     orbitVenus.add(venus);
@@ -252,7 +252,7 @@ function generateRevolution(orbits, angle){
         } 
         // Saturn
         if (orbit == 5){ 
-            orbits.children[orbit].rotation.y += angle * 2.5; 
+            orbits.children[orbit].rotation.y += angle * 2.4; 
             // Special case
             for(var i = 1; i < 11; i++){
                 saturn.children[i].rotation.y += angle * 10;
@@ -370,15 +370,15 @@ function randomSpherePoint(radius){
    return [x, y, z];
 }
 
-function generateOrbit(x,y,r){
+function generateOrbit(r){
     var geometry = new THREE.Geometry();
     var material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
     var segments = 90;
-
+    
     for (var i = 0; i <= segments; i++) {
         var theta = (i / segments) * Math.PI * 2;
-        var coordX = x + Math.cos(theta) * r;
-        var coordY =  y + Math.sin(theta) * r;
+        var coordX = Math.cos(theta) * r;
+        var coordY = -0.978 * Math.sin(theta) * r;
         
         geometry.vertices.push(new THREE.Vector3(coordX, 0, coordY));            
     }
