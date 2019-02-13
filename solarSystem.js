@@ -1,3 +1,9 @@
+/*
+Name: Daniela Flores Javier.
+ID: A01023226.
+*/
+
+//General variables
 var renderer = null, 
 scene = null, 
 camera = null,
@@ -9,22 +15,24 @@ normalMap = null,
 specularMap = null,
 bumpMap = null;
 
+/******* Textures *******/
+// Sun material
 var sunMapUrl = "images/1 - sun.jpg";
 map = new THREE.TextureLoader().load(sunMapUrl);
 var sun_materials = new THREE.MeshPhongMaterial({ map: map });
-
+// Mercury material
 var mercuryMapUrl = "images/2 - mercury.jpg";
 var mercuryBumpMapUrl = "images/2.1 - mercurybump.jpg";
 map = new THREE.TextureLoader().load(mercuryMapUrl);
 bumpMap = new THREE.TextureLoader().load(mercuryBumpMapUrl);
-var mercury_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: map, bumpScale: 1.5 });
-
+var mercury_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: bumpMap, bumpScale: 1.5 });
+// Venus material
 var venusMapUrl = "images/3 - venus.jpg";
 var venusBumpMapUrl = "images/3.1 - venusbump.jpg";
 map = new THREE.TextureLoader().load(venusMapUrl);
 bumpMap = new THREE.TextureLoader().load(venusBumpMapUrl);
-var venus_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: map, bumpScale: 1.0 });
-
+var venus_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: bumpMap, bumpScale: 1.0 });
+// Earth material
 var earthMapUrl = "images/4 - earth.jpg";
 var earthNormalMapUrl = "images/4.1 - earthnormal.jpg";
 var earthspecularMapUrl = "images/4.2 - earthspecular.jpg";
@@ -32,41 +40,46 @@ map = new THREE.TextureLoader().load(earthMapUrl);
 normalMap = new THREE.TextureLoader().load(earthNormalMapUrl);
 specularMap = new THREE.TextureLoader().load(earthspecularMapUrl);
 var earth_materials = new THREE.MeshPhongMaterial({ map: map, normalMap: normalMap, specularMap: specularMap });
-
+// Mars material
 var marsMapUrl = "images/5 - mars.jpg";
 var marsBumpMapUrl = "images/5.1 - marsbump.jpg";
 map = new THREE.TextureLoader().load(marsMapUrl);
 bumpMap = new THREE.TextureLoader().load(marsBumpMapUrl);
-var mars_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: map, bumpScale: 1.5 });
-
+var mars_materials = new THREE.MeshPhongMaterial({ map: map, bumpMap: bumpMap, bumpScale: 1.5 });
+// Jupiter material
 var jupiterMapUrl = "images/6 - jupiter.jpg";
 map = new THREE.TextureLoader().load(jupiterMapUrl);
 var jupiter_materials = new THREE.MeshPhongMaterial({ map: map });
-
+// Saturn material
 var saturnMapUrl = "images/7 - saturn.jpg";
 map = new THREE.TextureLoader().load(saturnMapUrl);
 var saturn_materials = new THREE.MeshPhongMaterial({ map: map });
-
+// Uranus material
 var uranusMapUrl = "images/8 - uranus.jpg";
 map = new THREE.TextureLoader().load(uranusMapUrl);
 var uranus_materials = new THREE.MeshPhongMaterial({ map: map });
-
+// Neptune material
 var neptuneMapUrl = "images/9 - neptune.jpg";
 map = new THREE.TextureLoader().load(neptuneMapUrl);
 var neptune_materials = new THREE.MeshPhongMaterial({ map: map });
-
+// Pluto material
 var plutoMapUrl = "images/10 - pluto.jpg";
 var plutoBumpMapUrl = "images/10.1 - plutobump.jpg";
 map = new THREE.TextureLoader().load(plutoMapUrl);
 bumpMap = new THREE.TextureLoader().load(plutoBumpMapUrl);
-var pluto_materials = new THREE.MeshPhongMaterial({map: map, bumpMap: map, bumpScale: 1.5 });
-
+var pluto_materials = new THREE.MeshPhongMaterial({map: map, bumpMap: bumpMap, bumpScale: 1.5 });
+// Moon material
 var moonMapUrl = "images/11 - moon.jpg";
 var moonBumpMapUrl = "images/11.1 - moonbump.jpg";
 map = new THREE.TextureLoader().load(moonMapUrl);
 bumpMap = new THREE.TextureLoader().load(moonBumpMapUrl);
-var moon_materials = new THREE.MeshPhongMaterial({map: map, bumpMap: map, bumpScale: 0.5 });
+var moon_materials = new THREE.MeshPhongMaterial({map: map, bumpMap: bumpMap, bumpScale: 0.5 });
+// Asteroid material
+var asteroidMapUrl = "images/12 - asteroid.jpg";
+map = new THREE.TextureLoader().load(asteroidMapUrl);
+var asteroid_materials = new THREE.MeshPhongMaterial({ map: map });
 
+/******* Planets ********/
 var sun = generatePlanet({ size_: 100, mat_: sun_materials });
 var mercury = generatePlanet({ size_: 9.8, mat_: mercury_materials });
 var venus = generatePlanet({ size_: 17.0, mat_: venus_materials });
@@ -77,7 +90,9 @@ var saturn = generatePlanet({ size_: 35.2, mat_: saturn_materials });
 var uranus = generatePlanet({ size_: 20.3, mat_: uranus_materials });
 var neptune = generatePlanet({ size_: 19.6, mat_: neptune_materials });
 var pluto = generatePlanet({ size_: 9.0, mat_: pluto_materials });
+var asteroids = new THREE.Object3D;
 
+/******** Orbits ********/
 var orbitMercury = new THREE.Object3D;
 var orbitVenus = new THREE.Object3D;
 var orbitEarth = new THREE.Object3D;
@@ -87,32 +102,38 @@ var orbitSaturn = new THREE.Object3D;
 var orbitUranus = new THREE.Object3D;
 var orbitNeptune = new THREE.Object3D;
 var orbitPluto = new THREE.Object3D;
+var orbitAsteroid = new THREE.Object3D;
 
+/******* Time *******/
 var duration = 20000; // ms
 var currentTime = Date.now();
 
-function animate() {
 
+// Function that generates the animation
+function animate() {
     var now = Date.now();
     var deltat = now - currentTime;
     currentTime = now;
     var fract = deltat / duration;
     var angle = Math.PI * 2 * fract;
-
+    //Rotates the elements of the Solar System
     generateRotation(orbits, angle);
+    //Generates the revolution of the elements from the Solar System
     generateRevolution(orbits, angle);
 }
 
+// Function that renders the scene
 function run() {
     requestAnimationFrame(function() { run(); });
         // Render the scene
         renderer.render( scene, camera );
         // Spin the cube for next frame
         animate();
-        // Update the camera controller
+        // controls.update() must be called after any manual changes to the camera's transform
         orbitControls.update();
 }
 
+// Function that creates the scene
 function createScene(canvas) {
     // Create the Three.js renderer and attach it to our canvas
     renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true } );
@@ -126,8 +147,9 @@ function createScene(canvas) {
     scene.background = new THREE.TextureLoader().load("images/milkyway.png");
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    orbitControls = new THREE.OrbitControls( camera, renderer.domElement);
-    // controls.update() must be called after any manual changes to the camera's transform
+    // Set the controls
+    orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    // Set the camera position
     camera.position.set(-500.52, 0, 0);
     // Add scene to the camera
     scene.add(camera);
@@ -135,15 +157,16 @@ function createScene(canvas) {
     createSolarSystem();
 }
 
+// Function that creates the Solar System
 function createSolarSystem(){
     orbits = new THREE.Object3D;
     solarSystem = new THREE.Object3D;
-    universeLight = new THREE.PointLight (0xffffff);
+    // Generates the light of the Solar System
+    universeLight = new THREE.AmbientLight(0xffffff);
     universeLight.position.set(0,0,0);
-    solarSystem.add(universeLight);
-
-    sun.add(new THREE.AmbientLight(0xffffff, 1.0));
-
+    // Adds a point light to the sun
+    sun.add(new THREE.PointLight(0xffffff, 1.2));
+    // Sets the position of each planet
     sun.position.set(0, 0, 0);
     mercury.position.set(0, 0, 150);
     venus.position.set(0, 0, 200);
@@ -154,7 +177,7 @@ function createSolarSystem(){
     uranus.position.set(0, 0, 620);
     neptune.position.set(0, 0, 700);
     pluto.position.set(0, 0, 750);
-
+    // Generates the rings of Saturn
     var saturnRadius = saturn.geometry.parameters.radius;
     var saturnRingsTexture = new THREE.TextureLoader().load("images/7.1 - saturn ring.png");
     var saturnMaterials = new THREE.MeshPhongMaterial({ map: saturnRingsTexture,side: THREE.DoubleSide, transparent: true, opacity: 0.8});
@@ -163,7 +186,7 @@ function createSolarSystem(){
     saturnRings.rotation.set(20, 0, 0);
     saturnRings.rotation.y = Math.PI / 5;
     saturn.add(saturnRings);
-
+    // Generates the rings of Uranus
     var uranusRadius = uranus.geometry.parameters.radius;
     var uranusRingsTexture = new THREE.TextureLoader().load("images/8.1 - uranus ring.png");
     var uranusMaterials = new THREE.MeshPhongMaterial({ map: uranusRingsTexture,side: THREE.DoubleSide, transparent: true, opacity: 0.8});
@@ -172,7 +195,7 @@ function createSolarSystem(){
     uranusRings.rotation.set(20, 0, 0);
     uranusRings.rotation.y = Math.PI / 3;
     uranus.add(uranusRings);
-
+    // Creates the orbit with a specific radius
     orbitMercury = generateOrbit(150);
     orbitVenus = generateOrbit(200);
     orbitEarth = generateOrbit(250);
@@ -182,7 +205,7 @@ function createSolarSystem(){
     orbitUranus = generateOrbit(620);
     orbitNeptune = generateOrbit(700);
     orbitPluto = generateOrbit(750);
-
+    // Add planets to each orbit
     orbitMercury.add(mercury);
     orbitVenus.add(venus);
     orbitEarth.add(earth);
@@ -192,7 +215,7 @@ function createSolarSystem(){
     orbitUranus.add(uranus);
     orbitNeptune.add(neptune);
     orbitPluto.add(pluto);
-
+    // Create a group of orbits
     orbits.add(orbitMercury);
     orbits.add(orbitVenus);
     orbits.add(orbitEarth);
@@ -202,7 +225,8 @@ function createSolarSystem(){
     orbits.add(orbitUranus);
     orbits.add(orbitNeptune);
     orbits.add(orbitPluto);
-
+    orbits.add(orbitAsteroid);
+    // Generates moons of certain planets
     generateMoons(earth, 1);
     generateMoons(mars, 2);
     generateMoons(jupiter, 10);
@@ -210,18 +234,24 @@ function createSolarSystem(){
     generateMoons(uranus, 10);
     generateMoons(neptune, 10);
     generateMoons(pluto, 5);
-
+    // Generates the asteroids of the Solar System
+    generateAsteroids(orbitAsteroid, 150);
+    // Add the light to the Solar System
+    solarSystem.add(universeLight);
+    // Add sun
     solarSystem.add(sun);
+    // Add orbits
     solarSystem.add(orbits);
-    
+    // Add Solar System to scene
     scene.add(solarSystem);
 }
 
+// Function that generates a planet
 function generatePlanet(specs){
     var size_ = specs.size_;
     var material = specs.mat_;
 
-    var figure = new THREE.SphereGeometry(1, 70, 70);
+    var figure = new THREE.SphereGeometry(1, 30, 30);
     var planet = new THREE.Mesh(figure, material);
 
     planet.scale.set(size_, size_, size_);
@@ -229,31 +259,85 @@ function generatePlanet(specs){
     return planet;
 }
 
+// Function that creates asteroids
+function generateAsteroids(orbit, numAsteroids){
+    var size_min = 1; 
+    var size_max = 6;
+    var verts_min = 3;
+    var verts_max = 6;
 
+    for(var i = 0; i < numAsteroids; i++){
+        var size = Math.random() * (+ size_max - + size_min) + +size_min; 
+        var verts = Math.random() * (+ verts_max - + verts_min) + +verts_min; 
+
+        var geometry = new THREE.SphereGeometry(size, verts, verts);
+        var asteroid = new THREE.Mesh(geometry, asteroid_materials);
+
+        var radius = 330;
+        var coords = randomRingPoint(radius);
+        
+        asteroid.position.set(coords[0], coords[1], coords[2]);
+        asteroids.add(asteroid);
+    }
+
+    orbit.add(asteroids);
+}
+
+// Function that generates the moons
+function generateMoons(planet, n_moons){
+    for (var i = 0; i < n_moons; i++) {
+        // Get the radius of the planet
+        var radius = planet.geometry.parameters.radius;
+        // generate a random coordinates
+        var coords = randomSpherePoint(1.25);
+        // Create the moon
+        var moon = generatePlanet({ size_:0.1, mat_: moon_materials });
+        moon.position.set(coords[0], coords[1], coords[2]);
+        // Generate a orbit
+        var orbitMoon = new THREE.Object3D;
+        // Add the moon to its planet
+        planet.add(orbitMoon);
+        orbitMoon.add(moon);
+    }
+}
+
+// Function that generates the orbits
+function generateOrbit(radius){
+    var geometry = new THREE.Geometry();
+    var material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
+    var segments = 65;
+    
+    for (var i = 0; i <= segments; i++) {
+        var theta = (i / segments) * Math.PI * 2;
+        var coordX = Math.cos(theta) * radius;
+        var coordY = -0.978 * Math.sin(theta) * radius;
+        
+        geometry.vertices.push(new THREE.Vector3(coordX, 0, coordY));            
+    }
+
+    var orbit = new THREE.Line(geometry, material);
+
+    return orbit;
+}
+
+// Funtion that generates the revolution of the elements
 function generateRevolution(orbits, angle){
     // Revolution
     for(var orbit in orbits.children){
-        if (orbit == 0){ orbits.children[orbit].rotation.y += angle * 2.7; } // Mercury
-        if (orbit == 1){ orbits.children[orbit].rotation.y += angle * 2.4; } // Venus
+        // Mercury
+        if (orbit == 0){ orbits.children[orbit].rotation.y += angle * 2.7; }
+        // Venus
+        if (orbit == 1){ orbits.children[orbit].rotation.y += angle * 2.4; } 
         // Earth
-        if (orbit == 2){ 
-            orbits.children[orbit].rotation.y += angle * 2.1; 
-            generateMoonRevolution(earth, angle);
-        } 
+        if (orbit == 2){ orbits.children[orbit].rotation.y += angle * 2.1; } 
         // Mars
-        if (orbit == 3){ 
-            orbits.children[orbit].rotation.y += angle * 1.8; 
-            generateMoonRevolution(mars, angle);
-        } 
+        if (orbit == 3){ orbits.children[orbit].rotation.y += angle * 1.8; } 
         // Jupiter
-        if (orbit == 4){ 
-            orbits.children[orbit].rotation.y += angle * 1.5; 
-            generateMoonRevolution(jupiter, angle);
-        } 
+        if (orbit == 4){ orbits.children[orbit].rotation.y += angle * 1.5; } 
         // Saturn
         if (orbit == 5){ 
             orbits.children[orbit].rotation.y += angle * 2.4; 
-            // Special case
+            // Special case: generating the revolution of the moons.
             for(var i = 1; i < 11; i++){
                 saturn.children[i].rotation.y += angle * 10;
             }
@@ -261,104 +345,113 @@ function generateRevolution(orbits, angle){
         // Uranus
         if (orbit == 6){ 
             orbits.children[orbit].rotation.y += angle * 1.2; 
-            // Special case
+            // Special case: generating the revolution of the moons.
             for(var i = 1; i < 11; i++){
                 uranus.children[i].rotation.y += angle * 10;
             }
         } 
         // Neptune
-        if (orbit == 7){ 
-            orbits.children[orbit].rotation.y += angle * 0.9; 
-            generateMoonRevolution(neptune, angle);
-            } 
+        if (orbit == 7){ orbits.children[orbit].rotation.y += angle * 0.9; } 
         // Pluto
-        if (orbit == 8){ 
-            orbits.children[orbit].rotation.y += angle * 0.6; 
-            generateMoonRevolution(pluto, angle);
-        }
+        if (orbit == 8){ orbits.children[orbit].rotation.y += angle * 0.6; }
     }
+    // Creates the moon revolution
+    generateMoonRevolution(earth, angle);
+    generateMoonRevolution(mars, angle);
+    generateMoonRevolution(jupiter, angle);
+    generateMoonRevolution(neptune, angle);
+    generateMoonRevolution(pluto, angle);
+    // Create the asteroid's revolution
+    generateAsteroidRevolution(angle);
 }
 
+// Funtion that generates the rotation of the elements
 function generateRotation(orbits, angle){
     // Rotation
     solarSystem.children[1].rotation.y += angle / 2;
     for(var orbit in orbits.children){
-        if (orbit == 0){ 
-        orbits.children[orbit].children[0].rotation.y += angle * 2.0; 
-        } // Mercury
-
-        if (orbit == 1){ orbits.children[orbit].children[0].rotation.y += angle * 1.5; } // Venus
+        // Mercury
+        if (orbit == 0){ orbits.children[orbit].children[0].rotation.y += angle * 2.0; } 
+        // Venus
+        if (orbit == 1){ orbits.children[orbit].children[0].rotation.y += angle * 1.5; } 
         // Earth
-        if (orbit == 2){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 3.5; 
-            generateMoonRotation(earth, angle);
-        } 
+        if (orbit == 2){ orbits.children[orbit].children[0].rotation.y += angle * 3.5; } 
         // Mars
-        if (orbit == 3){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 3.0; 
-            generateMoonRotation(mars, angle);
-        } 
+        if (orbit == 3){ orbits.children[orbit].children[0].rotation.y += angle * 3.0; } 
         // Jupiter
-        if (orbit == 4){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 6.0; 
-            generateMoonRotation(jupiter, angle);
-        } 
+        if (orbit == 4){ orbits.children[orbit].children[0].rotation.y += angle * 6.0; } 
         // Saturn
         if (orbit == 5){ 
             orbits.children[orbit].children[0].rotation.y += angle * 7.0;
             for(var i = 1; i < 11; i++){
-                saturn.children[i].rotation.y += angle * 10;            //Revolution
+                saturn.children[i].rotation.y += angle * 10;
                 saturn.children[i].children[0].rotation.y += angle * 10;// Rotation
             }
         }
         // Uranus
         if (orbit == 6){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 4.5; //Rot
+            orbits.children[orbit].children[0].rotation.y += angle * 4.5;    //Rotation
             for(var i = 1; i < 11; i++){
-                uranus.children[i].children[0].rotation.y += angle * 10;// Rotation
+                uranus.children[i].children[0].rotation.y += angle * 10;    // Rotation
             }
         } 
         // Neptune
-        if (orbit == 7){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 5.0;
-            generateMoonRotation(neptune, angle);
-        } 
+        if (orbit == 7){ orbits.children[orbit].children[0].rotation.y += angle * 5.0; } 
         // Pluto
-        if (orbit == 8){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 2.5;
-            generateMoonRotation(pluto, angle);
-         } 
+        if (orbit == 8){ orbits.children[orbit].children[0].rotation.y += angle * 2.5; } 
     }
+    // Creates the rotation of the moons
+    generateMoonRotation(earth, angle);
+    generateMoonRotation(mars, angle);
+    generateMoonRotation(jupiter, angle);
+    generateMoonRotation(neptune, angle);
+    generateMoonRotation(pluto, angle);
+    // Creates the rotation of the asteroids
+    generateAsteroidRotation(angle);
 }
 
+
+// Function that generates the asteroid revolution
+function generateAsteroidRevolution(angle){
+    // Revolution
+    for(var or in orbitAsteroid.children){
+        orbitAsteroid.children[or].rotation.y += angle * 0.5;
+    }
+}
+// Function that generates the rotation of the asteroid
+function generateAsteroidRotation(angle){
+    // Rotation
+    for(var or in asteroids.children){
+        asteroids.children[or].rotation.y += angle * 2;
+    }
+}
+// Function that generates the revolution of the moons
 function generateMoonRevolution(planet, angle){
+    //Revolution
     for(var i in planet.children){
-        planet.children[i].rotation.y += angle * 10;            //Revolution
+        planet.children[i].rotation.y += angle * 10;            
     }
 }
-
+// Function that generates the rotation of the moons
 function generateMoonRotation(planet, angle){
+    // Rotation
     for(var i in planet.children){
-        planet.children[i].children[0].rotation.y += angle * 10;// Rotation
+        planet.children[i].children[0].rotation.y += angle * 10;
     }
 }
-function generateMoons(planet, n_moons){
-    for (var i = 0; i < n_moons; i++) {
-        
-        var radius = planet.geometry.parameters.radius;
-        var coords = randomSpherePoint(radius);
-        var moon = generatePlanet({ size_:0.1, mat_: moon_materials });
-        moon.position.set(coords[0], coords[1], coords[2]);
-        var orbitMoon = new THREE.Object3D;
-        planet.add(orbitMoon);
-        orbitMoon.add(moon);
-    }
+// Function that creates a random point coordinate on a ring
+function randomRingPoint(radius){
+    var theta = (Math.random() * Math.PI * 2);
+    var phi = (Math.acos(2 * Math.random() - 1)) / 20;
+    var x = radius * Math.cos(theta) * Math.cos(phi);
+    var y = radius * Math.sin(phi);
+    var z = radius * Math.sin(theta) * Math.cos(phi);
+    
+    return [x, y, z];
 }
-
-// source = https://stackoverflow.com/questions/5531827/random-point-on-a-given-sphere
-// Function that returns a random xyz point
+// Function that returns a random xyz point on a sphere
+// Source = https://stackoverflow.com/questions/5531827/random-point-on-a-given-sphere
 function randomSpherePoint(radius){
-   radius = 1 + 0.25;
    var u = Math.random();
    var v = Math.random();
    var theta = 2 * Math.PI * u;
@@ -368,22 +461,4 @@ function randomSpherePoint(radius){
    var z = radius * Math.cos(phi);
 
    return [x, y, z];
-}
-
-function generateOrbit(r){
-    var geometry = new THREE.Geometry();
-    var material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
-    var segments = 90;
-    
-    for (var i = 0; i <= segments; i++) {
-        var theta = (i / segments) * Math.PI * 2;
-        var coordX = Math.cos(theta) * r;
-        var coordY = -0.978 * Math.sin(theta) * r;
-        
-        geometry.vertices.push(new THREE.Vector3(coordX, 0, coordY));            
-    }
-
-    orbit = new THREE.Line(geometry, material);
-
-    return orbit;
 }
