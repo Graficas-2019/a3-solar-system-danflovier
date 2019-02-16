@@ -530,7 +530,3 @@ function randomSpherePoint(radius){
 
    return [x, y, z];
 }
-
-function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
-}
