@@ -1,6 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Three.js Solar System</title>
 
 <link rel="stylesheet" href="../libs/jquery-ui/jquery-ui.css" />
@@ -12,11 +13,11 @@
 <script src="../libs/jquery-3.3.1/jquery-3.3.1.js"></script>
 <script src="../libs/jquery-ui/jquery-ui.js"></script>
 <script src="../libs/three.js/three.js"></script>
-<!--<script src="../libs/three.js/controls/OrbitControls.js"></script>-->
+<script src="../libs/three.js/controls/OrbitControls.js"></script>
 <script src="../libs/colorpicker/js/colorpicker.js"></script>
 
 <script src="solarSystem.js"></script>
-<script src="orbitControls.js"></script>
+<!--<script src="orbitControls.js"></script>-->
 <!-- <script src="sceneHandler.js"></script> -->
 
 <script type="text/javascript">
@@ -29,31 +30,24 @@
 				// create the scene
 				createScene(canvas);
 
-				// initialize the controls
-				//initControls();
-				
 		        // Run the run loop
 		        run();
 			}
 	);
 
 </script>
-
 </head>
 <body>
-<canvas id="webglcanvas"></canvas>
-<div id="container">
-	<!--
-	<div id="title">
-		Three.js Solar System
+	<div id="container">
+	    <canvas id="webglcanvas"></canvas>
+		<div id="title">
+			Three.js Solar System
+		</div>
+		<div id="prompt">
+			<br>Orbit &emsp; Use left mouse or one-finger move to touch
+			<br>Zoom&emsp;Use middle mouse/mousewheel or two-finger spread/squish to touch
+			<br>Pan &emsp; Use right mouse/ arrow keys or two-finger move to touch
+		</div>
 	</div>
-	<div id="instructions">
-		<p>Orbit - left mouse / touch: one-finger move</p>
-		<p>Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish</p>
-		<p>Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move</p>
-	</div>
-	-->
-</div>
-
-
+</body>
 </html>

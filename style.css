@@ -1,8 +1,65 @@
+@charset "UTF-8";
+
 *{
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
+}
+#webglcanvas {
+	border:none;
+	background-color:#ffffff;
 }
 
-canvas {
-    display: block;
+#container{
+	color:rgba(255,255,255,0.3);
+}
+#title {
+	position:relative;
+	left:20px;
+	top:20px;
+}
+
+#prompt {
+	position:relative;
+	left:20px;
+	top:20px;
+	font-size: 0.75em;
+}
+
+#status {
+	position:absolute;
+	bottom:20px;
+	width:200px;
+	height:40px;
+	right:20px;
+	color:#f4f5b8;
+}
+
+#rotation {
+	position:absolute;
+	left:20px;
+	top:0px;
+}
+
+#scale {
+	position:absolute;
+	left:20px;
+	top:20px;
+}
+
+#slider {
+	position:absolute;
+	width:800px;
+	top:610px;
+	height:10px;
+	background:#e9e9e9;
+}
+
+#slider .ui-slider-handle {
+	height:12px;
+	top:-2px;
+	width:16px;
+}
+
+#webglcanvas {
+	background: #ffffff;
 }

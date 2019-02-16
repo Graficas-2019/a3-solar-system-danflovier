@@ -92,6 +92,19 @@ var neptune = generatePlanet({ size_: 19.6, mat_: neptune_materials });
 var pluto = generatePlanet({ size_: 9.0, mat_: pluto_materials });
 var asteroids = new THREE.Object3D;
 
+var timeMercury = 0;
+var timeVenus = 0;
+var timeEarth = 0;
+var timeMars = 0;
+var timeJupiter = 0;
+var timeSaturn = 0;
+var timeUranus = 0;
+var timeNeptune = 0;
+var timePluto = 0;
+var time = 0;
+var asteroidSpeed = new Array(150).fill(0);
+
+console.log(asteroidSpeed)
 /******** Orbits ********/
 var orbitMercury = new THREE.Object3D;
 var orbitVenus = new THREE.Object3D;
@@ -104,11 +117,25 @@ var orbitNeptune = new THREE.Object3D;
 var orbitPluto = new THREE.Object3D;
 var orbitAsteroid = new THREE.Object3D;
 
+var distMercury = 200;
+var distVenus = 250;
+var distEarth = 300;
+var distMars = 350;
+var distJupiter = 430;
+var distSaturn = 560;
+var distUranus = 670;
+var distNeptune = 750;
+var distPluto = 800;
+
 /******* Time *******/
 var duration = 20000; // ms
 var currentTime = Date.now();
 
 
+
+for(var i = 0; i < asteroidSpeed.length; i++){
+    asteroidSpeed[i] = (Math.random() * 0.0000001);
+}
 // Function that generates the animation
 function animate() {
     var now = Date.now();
@@ -117,6 +144,7 @@ function animate() {
     var fract = deltat / duration;
     var angle = Math.PI * 2 * fract;
     //Rotates the elements of the Solar System
+
     generateRotation(orbits, angle);
     //Generates the revolution of the elements from the Solar System
     generateRevolution(orbits, angle);
@@ -168,22 +196,22 @@ function createSolarSystem(){
     sun.add(new THREE.PointLight(0xffffff, 1.2));
     // Sets the position of each planet
     sun.position.set(0, 0, 0);
-    mercury.position.set(0, 0, 150);
-    venus.position.set(0, 0, 200);
-    earth.position.set(0, 0, 250);
-    mars.position.set(0, 0, 300);
-    jupiter.position.set(0, 0, 380);
-    saturn.position.set(0, 0, 510);
-    uranus.position.set(0, 0, 620);
-    neptune.position.set(0, 0, 700);
-    pluto.position.set(0, 0, 750);
+    mercury.position.set(0, 0, distMercury);
+    venus.position.set(0, 0, distVenus);
+    earth.position.set(0, 0, distEarth);
+    mars.position.set(0, 0, distMars);
+    jupiter.position.set(0, 0, distJupiter);
+    saturn.position.set(0, 0, distSaturn);
+    uranus.position.set(0, 0, distUranus);
+    neptune.position.set(0, 0, distNeptune);
+    pluto.position.set(0, 0, distPluto);
     // Generates the rings of Saturn
     var saturnRadius = saturn.geometry.parameters.radius;
     var saturnRingsTexture = new THREE.TextureLoader().load("images/7.1 - saturn ring.png");
     var saturnMaterials = new THREE.MeshPhongMaterial({ map: saturnRingsTexture,side: THREE.DoubleSide, transparent: true, opacity: 0.8});
     var saturnGeometryRings = new THREE.RingGeometry(1.2 * saturnRadius, 2 * saturnRadius, 2 * 100, 5, 0, Math.PI * 2);
     var saturnRings = new THREE.Mesh(saturnGeometryRings, saturnMaterials);
-    saturnRings.rotation.set(20, 0, 0);
+    saturnRings.rotation.set(20, 0, 0);    // Pos.X
     saturnRings.rotation.y = Math.PI / 5;
     saturn.add(saturnRings);
     // Generates the rings of Uranus
@@ -192,19 +220,19 @@ function createSolarSystem(){
     var uranusMaterials = new THREE.MeshPhongMaterial({ map: uranusRingsTexture,side: THREE.DoubleSide, transparent: true, opacity: 0.8});
     var uranusGeometryRings = new THREE.RingGeometry(1 * uranusRadius, 2 * uranusRadius, 2 * 100, 5, 0, Math.PI * 2);
     var uranusRings = new THREE.Mesh(uranusGeometryRings, uranusMaterials);
-    uranusRings.rotation.set(20, 0, 0);
+    uranusRings.rotation.set(20, 0, 0);    // Pos.X
     uranusRings.rotation.y = Math.PI / 3;
     uranus.add(uranusRings);
     // Creates the orbit with a specific radius
-    orbitMercury = generateOrbit(150);
-    orbitVenus = generateOrbit(200);
-    orbitEarth = generateOrbit(250);
-    orbitMars = generateOrbit(300);
-    orbitJupiter = generateOrbit(380);
-    orbitSaturn = generateOrbit(510);
-    orbitUranus = generateOrbit(620);
-    orbitNeptune = generateOrbit(700);
-    orbitPluto = generateOrbit(750);
+    orbitMercury = generateOrbit(distMercury);
+    orbitVenus = generateOrbit(distVenus);
+    orbitEarth = generateOrbit(distEarth);
+    orbitMars = generateOrbit(distMars);
+    orbitJupiter = generateOrbit(distJupiter);
+    orbitSaturn = generateOrbit(distSaturn);
+    orbitUranus = generateOrbit(distUranus);
+    orbitNeptune = generateOrbit(distNeptune);
+    orbitPluto = generateOrbit(distPluto);
     // Add planets to each orbit
     orbitMercury.add(mercury);
     orbitVenus.add(venus);
@@ -227,13 +255,13 @@ function createSolarSystem(){
     orbits.add(orbitPluto);
     orbits.add(orbitAsteroid);
     // Generates moons of certain planets
-    generateMoons(earth, 1);
-    generateMoons(mars, 2);
-    generateMoons(jupiter, 10);
-    generateMoons(saturn, 10);
-    generateMoons(uranus, 10);
-    generateMoons(neptune, 10);
-    generateMoons(pluto, 5);
+    generateMoons(earth, 1, 0.1);
+    generateMoons(mars, 2, 0.15);
+    generateMoons(jupiter, 79, 0.025);
+    generateMoons(saturn, 62, 0.030);
+    generateMoons(uranus, 27, 0.025);
+    generateMoons(neptune, 14, 0.05);
+    generateMoons(pluto, 5, 0.1);
     // Generates the asteroids of the Solar System
     generateAsteroids(orbitAsteroid, 150);
     // Add the light to the Solar System
@@ -244,6 +272,7 @@ function createSolarSystem(){
     solarSystem.add(orbits);
     // Add Solar System to scene
     scene.add(solarSystem);
+    //generateAsteroidRotation(angle);
 }
 
 // Function that generates a planet
@@ -251,7 +280,7 @@ function generatePlanet(specs){
     var size_ = specs.size_;
     var material = specs.mat_;
 
-    var figure = new THREE.SphereGeometry(1, 30, 30);
+    var figure = new THREE.SphereGeometry(1, 15, 15);
     var planet = new THREE.Mesh(figure, material);
 
     planet.scale.set(size_, size_, size_);
@@ -264,7 +293,7 @@ function generateAsteroids(orbit, numAsteroids){
     var size_min = 1; 
     var size_max = 6;
     var verts_min = 3;
-    var verts_max = 6;
+    var verts_max = 5;
 
     for(var i = 0; i < numAsteroids; i++){
         var size = Math.random() * (+ size_max - + size_min) + +size_min; 
@@ -273,10 +302,10 @@ function generateAsteroids(orbit, numAsteroids){
         var geometry = new THREE.SphereGeometry(size, verts, verts);
         var asteroid = new THREE.Mesh(geometry, asteroid_materials);
 
-        var radius = 330;
+        var radius = 390;
         var coords = randomRingPoint(radius);
-        
         asteroid.position.set(coords[0], coords[1], coords[2]);
+
         asteroids.add(asteroid);
     }
 
@@ -284,15 +313,16 @@ function generateAsteroids(orbit, numAsteroids){
 }
 
 // Function that generates the moons
-function generateMoons(planet, n_moons){
-    for (var i = 0; i < n_moons; i++) {
+function generateMoons(planet, numberMoons, scale){
+    for (var i = 0; i < numberMoons; i++) {
         // Get the radius of the planet
-        var radius = planet.geometry.parameters.radius;
+        var radius = 1.25;
         // generate a random coordinates
-        var coords = randomSpherePoint(1.25);
+        var coords = randomSpherePoint(radius);
         // Create the moon
-        var moon = generatePlanet({ size_:0.1, mat_: moon_materials });
+        var moon = generatePlanet({ size_:scale, mat_: moon_materials });
         moon.position.set(coords[0], coords[1], coords[2]);
+
         // Generate a orbit
         var orbitMoon = new THREE.Object3D;
         // Add the moon to its planet
@@ -303,14 +333,17 @@ function generateMoons(planet, n_moons){
 
 // Function that generates the orbits
 function generateOrbit(radius){
+    var a = radius + 100;
+    var b = radius;
     var geometry = new THREE.Geometry();
     var material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
-    var segments = 65;
+    var segments = 50;
     
     for (var i = 0; i <= segments; i++) {
         var theta = (i / segments) * Math.PI * 2;
-        var coordX = Math.cos(theta) * radius;
-        var coordY = -0.978 * Math.sin(theta) * radius;
+
+        var coordX = a * Math.cos(theta);
+        var coordY = b * Math.sin(theta);
         
         geometry.vertices.push(new THREE.Vector3(coordX, 0, coordY));            
     }
@@ -323,44 +356,60 @@ function generateOrbit(radius){
 // Funtion that generates the revolution of the elements
 function generateRevolution(orbits, angle){
     // Revolution
-    for(var orbit in orbits.children){
-        // Mercury
-        if (orbit == 0){ orbits.children[orbit].rotation.y += angle * 2.7; }
-        // Venus
-        if (orbit == 1){ orbits.children[orbit].rotation.y += angle * 2.4; } 
-        // Earth
-        if (orbit == 2){ orbits.children[orbit].rotation.y += angle * 2.1; } 
-        // Mars
-        if (orbit == 3){ orbits.children[orbit].rotation.y += angle * 1.8; } 
-        // Jupiter
-        if (orbit == 4){ orbits.children[orbit].rotation.y += angle * 1.5; } 
-        // Saturn
-        if (orbit == 5){ 
-            orbits.children[orbit].rotation.y += angle * 2.4; 
-            // Special case: generating the revolution of the moons.
-            for(var i = 1; i < 11; i++){
-                saturn.children[i].rotation.y += angle * 10;
-            }
-        } 
-        // Uranus
-        if (orbit == 6){ 
-            orbits.children[orbit].rotation.y += angle * 1.2; 
-            // Special case: generating the revolution of the moons.
-            for(var i = 1; i < 11; i++){
-                uranus.children[i].rotation.y += angle * 10;
-            }
-        } 
-        // Neptune
-        if (orbit == 7){ orbits.children[orbit].rotation.y += angle * 0.9; } 
-        // Pluto
-        if (orbit == 8){ orbits.children[orbit].rotation.y += angle * 0.6; }
-    }
+    timeMercury += 0.008;
+    timeVenus += 0.007;
+    timeEarth += 0.006;
+    timeMars += 0.005;
+    timeJupiter += 0.004;
+    timeSaturn += 0.009;
+    timeUranus += 0.003;
+    timeNeptune += 0.002;
+    timePluto += 0.001;
+    //time += 0.008;
+
+    mercury.position.x = (distMercury + 100) * Math.cos(timeMercury);
+    mercury.position.z = distMercury * Math.sin(timeMercury);
+
+    venus.position.x = (distVenus + 100) * Math.cos(timeVenus);
+    venus.position.z = distVenus * Math.sin(timeVenus);
+
+    earth.position.x = (distEarth + 100) * Math.cos(timeEarth);
+    earth.position.z = distEarth * Math.sin(timeEarth);
+
+    mars.position.x = (distMars + 100) * Math.cos(timeMars);
+    mars.position.z = distMars * Math.sin(timeMars);
+
+    jupiter.position.x = (distJupiter + 100) * Math.cos(timeJupiter);
+    jupiter.position.z = distJupiter * Math.sin(timeJupiter);
+
+    saturn.position.x = (distSaturn + 100) * Math.cos(timeSaturn);
+    saturn.position.z = distSaturn * Math.sin(timeSaturn);
+
+    uranus.position.x = (distUranus + 100) * Math.cos(timeUranus);
+    uranus.position.z = distUranus * Math.sin(timeUranus);
+
+    neptune.position.x = (distNeptune + 100) * Math.cos(timeNeptune);
+    neptune.position.z = distNeptune * Math.sin(timeNeptune);
+
+    pluto.position.x = (distPluto + 100) * Math.cos(timePluto);
+    pluto.position.z = distPluto * Math.sin(timePluto);
+
     // Creates the moon revolution
     generateMoonRevolution(earth, angle);
     generateMoonRevolution(mars, angle);
     generateMoonRevolution(jupiter, angle);
     generateMoonRevolution(neptune, angle);
     generateMoonRevolution(pluto, angle);
+
+    // Special case: generating the revolution of the moons for Uranus
+    for(var i = 1; i < 28; i++){
+        uranus.children[i].rotation.y += angle * 10;
+    }
+    // Special case: generating the revolution of the moons for Saturn
+    for(var i = 1; i < 63; i++){
+        saturn.children[i].rotation.y += angle * 10;
+    }
+
     // Create the asteroid's revolution
     generateAsteroidRevolution(angle);
 }
@@ -379,20 +428,22 @@ function generateRotation(orbits, angle){
         // Mars
         if (orbit == 3){ orbits.children[orbit].children[0].rotation.y += angle * 3.0; } 
         // Jupiter
-        if (orbit == 4){ orbits.children[orbit].children[0].rotation.y += angle * 6.0; } 
+        if (orbit == 4){ orbits.children[orbit].children[0].rotation.y += angle * 5.5; } 
         // Saturn
         if (orbit == 5){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 7.0;
-            for(var i = 1; i < 11; i++){
+            orbits.children[orbit].children[0].rotation.y += angle * 5.6;
+            // Special case: generating the rotation of the moons
+            for(var i = 1; i < 63; i++){
                 saturn.children[i].rotation.y += angle * 10;
-                saturn.children[i].children[0].rotation.y += angle * 10;// Rotation
+                saturn.children[i].children[0].rotation.y += angle * 10;
             }
         }
         // Uranus
         if (orbit == 6){ 
-            orbits.children[orbit].children[0].rotation.y += angle * 4.5;    //Rotation
-            for(var i = 1; i < 11; i++){
-                uranus.children[i].children[0].rotation.y += angle * 10;    // Rotation
+            orbits.children[orbit].children[0].rotation.y += angle * 4.0;
+            // Special case: generating the rotation of the moons
+            for(var i = 1; i < 28; i++){
+                uranus.children[i].children[0].rotation.y += angle * 10;
             }
         } 
         // Neptune
@@ -414,14 +465,29 @@ function generateRotation(orbits, angle){
 // Function that generates the asteroid revolution
 function generateAsteroidRevolution(angle){
     // Revolution
+    time += 0.008;
+    
     for(var or in orbitAsteroid.children){
+        /*
         orbitAsteroid.children[or].rotation.y += angle * 0.5;
+
+        */
+        //orbitAsteroid.children[or].rotation.z +=  angle / 10; 
     }
+    
 }
 // Function that generates the rotation of the asteroid
 function generateAsteroidRotation(angle){
+    
     // Rotation
+    console.log(asteroidSpeed)
     for(var or in asteroids.children){
+        //time += Math.random()
+        time += or * 0.01;
+        asteroidSpeed[or] += asteroidSpeed[or];
+        asteroids.children[or].position.x =  490 * Math.cos(time); 
+        asteroids.children[or].position.z =  390 * Math.sin(time); 
+        
         asteroids.children[or].rotation.y += angle * 2;
     }
 }
@@ -441,24 +507,30 @@ function generateMoonRotation(planet, angle){
 }
 // Function that creates a random point coordinate on a ring
 function randomRingPoint(radius){
+    var a = radius + 100;
+    var b = radius;
+
     var theta = (Math.random() * Math.PI * 2);
     var phi = (Math.acos(2 * Math.random() - 1)) / 20;
-    var x = radius * Math.cos(theta) * Math.cos(phi);
+
+    var x = a * Math.cos(theta) * Math.cos(phi);
     var y = radius * Math.sin(phi);
-    var z = radius * Math.sin(theta) * Math.cos(phi);
+    var z = b * Math.sin(theta) * Math.cos(phi);
     
     return [x, y, z];
 }
 // Function that returns a random xyz point on a sphere
 // Source = https://stackoverflow.com/questions/5531827/random-point-on-a-given-sphere
 function randomSpherePoint(radius){
-   var u = Math.random();
-   var v = Math.random();
-   var theta = 2 * Math.PI * u;
-   var phi = Math.acos(2 * v - 1);
+   var theta = 2 * Math.PI * Math.random();
+   var phi = Math.acos(2 * Math.random() - 1);
    var x = radius * Math.sin(phi) * Math.cos(theta);
    var y = radius * Math.sin(phi) * Math.sin(theta);
    var z = radius * Math.cos(phi);
 
    return [x, y, z];
+}
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
 }
